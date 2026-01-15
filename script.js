@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Конфигурация Telegram бота
     // ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ!
-    const TELEGRAM_BOT_TOKEN = 'ВАШ_ТОКЕН_БОТА';
-    const TELEGRAM_CHAT_ID = 'ВАШ_CHAT_ID';
+    const TELEGRAM_BOT_TOKEN = '8531904307:AAGwQ-dsKn8B32fSgPx8YoHrSXKM_COEvw0';
+    const TELEGRAM_CHAT_ID = '468095537';
     
     // Адрес API для отправки сообщений в Telegram
     const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
