@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    let userName;
+    let userName = 'Кто-то';
     // Обработка ответа пользователя
     async function handleUserResponse(response) {
 
