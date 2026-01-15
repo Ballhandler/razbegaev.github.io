@@ -111,11 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    let userName = 'Кто-то';
+    let userName = '';
     // Обработка ответа пользователя
     async function handleUserResponse(response) {
+        while(userName === ''){
+            userName = prompt('Введите имя');}
 
-        userName = prompt('Введите имя');
         // Показываем сообщение пользователю
         if (response === 'yes') {
             responseMessage.textContent = 'Ура! Жду тебя на празднике! Не забудь аппетит и хорошее настроение. Костюм марионетки необязателен!🎉';
