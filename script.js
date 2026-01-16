@@ -82,106 +82,121 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
     
-    let userName = localStorage.getItem('userName') || '';
+    let userName = localStorage.getItem('userName');
 
-    // Функция отправки уведомления в Telegram
-    async function sendTelegramNotification(response) {
-        const message = response === 'yes' 
-            ? `🎉 Отличные новости! ${userName} подтвердил участие в вашем дне рождения!` 
-            : `😔 К сожалению, ${userName} не сможет прийти на ваш день рождения.`;
+    if (userName === 'Даня'||
+        userName === 'Карина'||
+        userName === 'Вова'||
+        userName === 'Катя'||
+        userName === 'Коля'||
+        userName === 'Арина'||
+        userName === 'Кирилл'||
+        userName === 'Максим'||
+        userName === 'Кристина'
+        ){
+
+
+        // Функция отправки уведомления в Telegram
+        async function sendTelegramNotification(response) {
+            const message = response === 'yes' 
+                ? `🎉 Отличные новости! ${userName} подтвердил участие в вашем дне рождения!` 
+                : `😔 К сожалению, ${userName} не сможет прийти на ваш день рождения.`;
+            
+            const data = {
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            };
+            
+            try {
+                const response = await fetch(TELEGRAM_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                return result.ok;
+            } catch (error) {
+                console.error('Ошибка отправки:', error);
+                return false;
+            }
+        }
         
-        const data = {
-            chat_id: TELEGRAM_CHAT_ID,
-            text: message,
-            parse_mode: 'HTML'
-        };
+        // Обработка ответа пользователя
+        async function handleUserResponse(response) {
+
+            // Показываем сообщение пользователю
+            if (response === 'yes') {
+                responseMessage.textContent = `Ура, ${userName}! Жду тебя на празднике! Не забудь аппетит и хорошее настроение. Костюм марионетки необязателен!🎉`;
+                responseMessage.className = 'response-message success';
+            } else {
+                responseMessage.textContent = `Очень жаль, ${userName}! Буду скучать! ❤️`;
+                responseMessage.className = 'response-message success';
+            }
+            
+            // Отправляем уведомление в Telegram
+            const success = await sendTelegramNotification(response);
+            
+            if (!success) {
+                console.log('Уведомление не отправлено - проверьте настройки бота');
+                responseMessage.className = 'response-message error';
+            }
+            
+            // Блокируем кнопки после ответа
+            yesBtn.disabled = true;
+            noBtn.disabled = true;
+            yesBtn.style.opacity = '0.6';
+            noBtn.style.opacity = '0.6';
+            
+            // Добавляем анимацию
+            if (response === 'yes') {
+                celebrate();
+            }
+        }
         
-        try {
-            const response = await fetch(TELEGRAM_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+        // Обработчики кнопок
+        yesBtn.addEventListener('click', () => handleUserResponse('yes'));
+        noBtn.addEventListener('click', () => handleUserResponse('no'));
+        
+        // Функция праздничной анимации
+        function celebrate() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#2ecc71', '#9b59b6'];
+            
+            for (let i = 0; i < 50; i++) {
+                createConfetti(colors[Math.floor(Math.random() * colors.length)]);
+            }
+        }
+        
+        function createConfetti(color) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti-piece';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = color;
+            confetti.style.width = Math.random() * 10 + 5 + 'px';
+            confetti.style.height = Math.random() * 15 + 10 + 'px';
+            confetti.style.position = 'fixed';
+            confetti.style.top = '-20px';
+            confetti.style.zIndex = '9999';
+            confetti.style.borderRadius = '0';
+            
+            document.body.appendChild(confetti);
+            
+            const animation = confetti.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(${window.innerHeight + 20}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 3000 + 2000,
+                easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
             });
             
-            const result = await response.json();
-            return result.ok;
-        } catch (error) {
-            console.error('Ошибка отправки:', error);
-            return false;
+            animation.onfinish = () => confetti.remove();
         }
-    }
-    
-    // Обработка ответа пользователя
-    async function handleUserResponse(response) {
-
-        // Показываем сообщение пользователю
-        if (response === 'yes') {
-            responseMessage.textContent = `Ура, ${userName}! Жду тебя на празднике! Не забудь аппетит и хорошее настроение. Костюм марионетки необязателен!🎉`;
-            responseMessage.className = 'response-message success';
-        } else {
-            responseMessage.textContent = `Очень жаль, ${userName}! Буду скучать! ❤️`;
-            responseMessage.className = 'response-message success';
-        }
-        
-        // Отправляем уведомление в Telegram
-        const success = await sendTelegramNotification(response);
-        
-        if (!success) {
-            console.log('Уведомление не отправлено - проверьте настройки бота');
-            responseMessage.className = 'response-message error';
-        }
-        
-        // Блокируем кнопки после ответа
-        yesBtn.disabled = true;
-        noBtn.disabled = true;
-        yesBtn.style.opacity = '0.6';
-        noBtn.style.opacity = '0.6';
-        
-        // Добавляем анимацию
-        if (response === 'yes') {
-            celebrate();
-        }
-    }
-    
-    // Обработчики кнопок
-    yesBtn.addEventListener('click', () => handleUserResponse('yes'));
-    noBtn.addEventListener('click', () => handleUserResponse('no'));
-    
-    // Функция праздничной анимации
-    function celebrate() {
-        const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#2ecc71', '#9b59b6'];
-        
-        for (let i = 0; i < 50; i++) {
-            createConfetti(colors[Math.floor(Math.random() * colors.length)]);
-        }
-    }
-    
-    function createConfetti(color) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti-piece';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = color;
-        confetti.style.width = Math.random() * 10 + 5 + 'px';
-        confetti.style.height = Math.random() * 15 + 10 + 'px';
-        confetti.style.position = 'fixed';
-        confetti.style.top = '-20px';
-        confetti.style.zIndex = '9999';
-        confetti.style.borderRadius = '0';
-        
-        document.body.appendChild(confetti);
-        
-        const animation = confetti.animate([
-            { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-            { transform: `translateY(${window.innerHeight + 20}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-        ], {
-            duration: Math.random() * 3000 + 2000,
-            easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
-        });
-        
-        animation.onfinish = () => confetti.remove();
-    }
+    } else { setTimeout(() => {
+            alert(`Не ломай сайт, бяка!!!`);
+        }, 500);}
     
     // Заполняем данные приглашения (замените на свои)
     function populateInvitationData() {
