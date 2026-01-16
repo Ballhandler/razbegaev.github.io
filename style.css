@@ -316,10 +316,11 @@ body::before {
     }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 600px) {
     .invitation-card {
-        height: 400px;
+        height: 450px;
     }
+
     
     .card-image {
         height: 175px;
