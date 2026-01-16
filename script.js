@@ -82,6 +82,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
     
+    let userName = localStorage.getItem('userName') || '';
+
     // Функция отправки уведомления в Telegram
     async function sendTelegramNotification(response) {
         const message = response === 'yes' 
@@ -111,18 +113,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    let userName = '';
     // Обработка ответа пользователя
     async function handleUserResponse(response) {
-        while(userName === ''){
-            userName = prompt('Введите имя');}
 
         // Показываем сообщение пользователю
         if (response === 'yes') {
-            responseMessage.textContent = 'Ура! Жду тебя на празднике! Не забудь аппетит и хорошее настроение. Костюм марионетки необязателен!🎉';
+            responseMessage.textContent = `Ура, ${userName}! Жду тебя на празднике! Не забудь аппетит и хорошее настроение. Костюм марионетки необязателен!🎉`;
             responseMessage.className = 'response-message success';
         } else {
-            responseMessage.textContent = 'Очень жаль! Буду скучать! ❤️';
+            responseMessage.textContent = `Очень жаль, ${userName}! Буду скучать! ❤️`;
             responseMessage.className = 'response-message success';
         }
         

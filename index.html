@@ -71,8 +71,26 @@
             <p>С любовью, <span class="name">[Ваше Имя]</span></p>
         </div>
     </div>
-
+    
     <script src="script.js"></script>
+    <!-- В самом конце перед закрывающим </body> -->
+    <script>
+    // Получаем имя из URL параметра
+        const urlParams = new URLSearchParams(window.location.search);
+        const userName = urlParams.get('name') || 'Гость';
+        
+        // Сохраняем в localStorage для использования в script.js
+        localStorage.setItem('userName', userName);
+        
+        // Можете также показывать приветствие
+        if (userName !== 'Гость') {
+            setTimeout(() => {
+                alert(`Привет, ${userName}! Добро пожаловать на приглашение!`);
+            }, 500);
+        }
+    </script>
+    
+
 </body>
 
 </html>
