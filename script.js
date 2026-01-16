@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const invitationData = {
             name: 'Дима',
             date: '24 января 2026',
-            time: 'Уточняется',
+            time: '14:00',
             place: 'ул.Вертолетчиков д.13, кв.300',
             hostName: 'Дмитрий'
         };
